@@ -1,0 +1,104 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    ll res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+const ll MAXN = 1e5 + 100, Min = 1e8;
+ll  sz = 1;
+pair <ll, ll> tree[MAXN * 4];
+ll f;
+void build(ll *a, ll n)
+{
+    while (sz < n)
+        sz *= 2;
+    for (ll i = sz; i < sz * 2; i++)
+    {
+        tree[i] = {( i < n + sz ? a[i - sz] : Min), i - sz + 1};
+    }
+    for (ll i = sz - 1; i > 0; i--)
+        if (tree[i*2].first < tree[i*2+1].first)
+            tree[i] = tree[i*2];
+        else
+            tree[i] = tree[i*2+1];
+}
+pair<ll, ll>  tree_min(ll v, ll tl, ll tr, ll l, ll r)
+{
+    if (l > r)
+        {
+            pair <ll, ll> xxx = {Min, -1};
+            return xxx;
+        }
+    if (tl == l && tr == r)
+    {
+        return tree[v];
+    }
+    ll tm = (tl + tr) / 2;
+    pair <ll, ll> xx = tree_min(v*2, tl, tm, l, min(r, tm)), yy = tree_min(v*2+1, tm + 1, tr, max(tm+1, l), r);
+    if (xx.first < yy.first)
+        return xx;
+    else
+        return yy;
+}
+ll pr[MAXN];
+ll get(ll l, ll r)
+{
+    return pr[r] - ( l ? pr[l-1] : 0);
+}
+ll ind[MAXN];
+int main()
+{
+    ll n, k;
+    cin>>n>>k;
+    ll a[n];
+    for (ll i = 0; i < n; i++)
+    {
+        cin>>a[i];
+        pr[i] = a[i] + (i ? pr[i-1] : 0);
+        ind[i] = -1;
+    }
+    build(a, n);
+    ll dp[MAXN], ans = 0, index;
+    pair <ll, ll> mx;
+    mx.first = 0;
+    mx.second = -1;
+    for (ll i = 0; i <= n - k ; i++)
+    {
+        if (i >= k)
+            if (dp[i-k] > mx.first)
+                mx ={dp[i-k], i - k};
+        dp[i] = mx.first;
+        ind[i] = mx.second;
+        if (i > n - k)
+            continue;
+        ll x = get(i, i + k -1);
+        ll y = tree_min(1, 1, sz, i + 1, i + k).first;
+        dp[i] += x * y;
+        if (dp[i] > ans)
+        {
+            ans = dp[i];
+            index  = i;
+        }
+    }
+    vector <ll> v;
+    while (index != -1)
+    {
+        ll x = tree_min(1, 1, sz, index + 1, index + k).second;
+        v.push_back(x);
+        index = ind[index];
+    }
+    reverse(v.begin(), v.end());
+    cout<<v.size()<<'\n';
+    for (auto it:v)
+        cout<<it<<" ";
+return 0;
+}
