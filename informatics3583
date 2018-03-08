@@ -92,11 +92,10 @@ int main()
     vector <ll> v;
     while (index != -1)
     {
-        ll x = tree_min(1, 1, sz, index + 1, index + k).second;
-        v.push_back(x);
+        v.push_back(index + 1);
         index = ind[index];
     }
-    reverse(v.begin(), v.end());
+    sort(v.begin(), v.end());
     cout<<v.size()<<'\n';
     for (auto it:v)
         cout<<it<<" ";
