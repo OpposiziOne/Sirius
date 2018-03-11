@@ -1,0 +1,88 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+const int MAXN = 1e5 + 100;
+int t[MAXN], cl[MAXN], cl_num[MAXN];
+bool used[MAXN], rib[MAXN];
+vector <int> g[MAXN], gr[MAXN], topsort;
+void DFS_sort(int v)
+{
+    used[v] = true;
+    for (auto it:g[v])
+        if (!used[it])
+            DFS_sort(it);
+    topsort.push_back(v);
+}
+void DFS_condens(int v, int color)
+{
+    cl[v] = color;
+    cl_num[color]++;
+    for (auto it:gr[v])
+        if (!cl[it])
+            DFS_condens(it, color);
+}
+int main()
+{
+    freopen("input.txt", "r", stdin);
+    int n, m, h, x, y;
+    cin>>n>>m>>h;
+    set <pair<int, int> > st;
+    for (int i = 1; i <= n; i++)
+        cin>>t[i];
+    for (int i = 0; i < m; i++)
+    {
+        cin>>x>>y;
+        if ((t[x] + 1) % h == t[y])
+            st.insert({x, y});
+        if ((t[y] + 1) % h == t[x])
+            st.insert({y, x});
+    }
+    for (auto it:st)
+    {
+        g[it.first].push_back(it.second);
+        gr[it.second].push_back(it.first);
+    }
+    for (int i = 1; i <= n; i++)
+        if (!used[i])
+            DFS_sort(i);
+    int color = 1;
+    for (int i = (int)topsort.size()-1; i >= 0; i--)
+        if (!cl[topsort[i]])
+        {
+            DFS_condens(topsort[i], color++);
+        }
+    for (auto it:st)
+    {
+        x = it.first;
+        y = it.second;
+        int f = cl[x];
+        if (cl[x] != cl[y])
+            rib[f] = true;
+    }
+    int mx = MAXN, index = 1;
+    for (int i = 1; i < color; i++)
+    {
+        if (!rib[i] && cl_num[i] < mx)
+        {
+            mx = cl_num[i];
+            index = i;
+        }
+    }
+    cout<<mx<<'\n';
+    for (int i = 1; i <= n; i++)
+        if (cl[i] == index)
+            cout<<i<<" ";
+return 0;
+}
