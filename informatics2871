@@ -1,0 +1,70 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+const int MAXN = 100;
+int x = 50, y = 50;
+string ask[5] = {"", "NORTH", "WEST", "SOUTH", "EAST"};
+int dx[5] = {0, 1, 0, -1, 0}, dy[5] = {0, 0, 1, 0, -1};
+bool used[MAXN][MAXN];
+
+
+bool call(int to)
+{
+    string ans;
+    cout<<ask[to]<<endl;
+    cin>>ans;
+    if (ans == "EMPTY")
+    {
+        x += dx[to];
+        y += dy[to];
+        return true;
+    }
+    else
+    {
+        used[x + dx[to]][y + dy[to]] = true;
+        return false;
+    }
+}
+
+bool DFS( int p)
+{
+    if (!call(p))
+        return false;
+    used[x][y] = true;
+    for (int i = 1; i <= 4; i++)
+        if (!used[x + dx[i]][y + dy[i]])
+        {
+            if (DFS(i)) {
+                if (i == 1)
+                    call(3);
+                if (i == 2)
+                    call(4);
+                if (i == 3)
+                    call(1);
+                if (i == 4)
+                    call(2);
+            }
+        }
+    return true;
+}
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    for (int i = 1; i <= 4; i++)
+        DFS(i);
+    cout<<"DONE";
+return 0;
+}
