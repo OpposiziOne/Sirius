@@ -1,0 +1,61 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+
+struct dot
+{
+    int x, y;
+};
+dot vectr(dot a, dot b)
+{
+    dot c;
+    c.x = b.x - a.x;
+    c.y = b.y - a.y;
+    return c;
+}
+int scolar(dot a, dot b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
+int kos(dot a, dot b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+
+d len(dot a)
+{
+    return sqrt(a.x*a.x + a.y*a.y);
+}
+int main()
+{
+    dot a, b, c;
+    cin>>c.x>>c.y>>a.x>>a.y>>b.x>>b.y;
+    dot AB = vectr(a, b), AC = vectr(a, c), BC = vectr(b, c), BA = vectr(b, a);
+    cout.precision(8);
+    cout<<fixed;
+    if (scolar(BA, BC) < 0)
+    {
+        cout<<len(BC);
+        return 0;
+    }
+    if (scolar(AB, AC) < 0)
+    {
+        cout<<len(AC);
+        return 0;
+    }
+    cout<<abs((d)kos(AB, AC) / (d)len(AB));
+return 0;
+}
