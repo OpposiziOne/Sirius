@@ -13,7 +13,7 @@ ll my_pow (ll a, ll n) {
         if (n & 1) { res *= a; --n; }
         else { a *= a; n >>= 1; }
     return res; }
-const int MAXN = 1e2;
+const int MAXN = 1e4;
 vector <int> g[MAXN][MAXN];
 pair <int, int> rib[MAXN];
 bool used[MAXN];
