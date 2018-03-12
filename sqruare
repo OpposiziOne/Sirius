@@ -1,0 +1,65 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+
+struct dot
+{
+    int x, y;
+};
+dot vectr(dot a, dot b)
+{
+    dot c;
+    c.x = b.x - a.x;
+    c.y = b.y - a.y;
+    return c;
+}
+int scolar(dot a, dot b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
+int kos(dot a, dot b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+int main()
+{
+    freopen("input.txt","r", stdin);
+    dot a, b, c;
+    cin>>a.x>>a.y>>b.x>>b.y>>c.x>>c.y;
+    //dot AB = vectr(a, b), AC = vectr(a, c), BA = vectr(b, a), BC = vectr(b, c), CA = vectr(c, a), CB = vectr
+    if (scolar(vectr(a, b), vectr(a, c)) == 0)
+    {
+        if (a.x == b.x && a.y == c.y)
+            cout<<c.x<<" "<<b.y;
+        else
+            cout<<b.x<<" "<<c.y;
+    }
+    else if (scolar(vectr(b, c), vectr(b, a)) == 0)
+    {
+        if (b.x == a.x && b.y == c.y)
+            cout<<c.x<<" "<<a.y;
+        else
+            cout<<a.x<<" "<<c.y;
+    }
+    else
+    {
+        if (c.x == a.x && c.y == b.y)
+            cout<<b.x<<" "<<a.y;
+        else
+            cout<<a.x<<" "<<b.y;
+    }
+return 0;
+}
