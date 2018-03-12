@@ -1,0 +1,79 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+
+struct dot
+{
+    int x, y;
+};
+dot vectr(dot a, dot b)
+{
+    dot c;
+    c.x = b.x - a.x;
+    c.y = b.y - a.y;
+    return c;
+}
+int scolar(dot a, dot b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
+int kos(dot a, dot b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+bool dot_vectr(dot AB, dot AC, dot AD)
+{
+    if (kos(AB, AC) * kos(AB, AD) <= 0)
+        return true;
+    return false;
+}
+bool one_line(dot a, dot b, dot c, dot d)
+{
+    if (kos(a, b) == 0 && kos(c, d) == 0)
+        return true;
+    return false;
+}
+int main()
+{
+    freopen("input.txt", "r", stdin);
+    dot a, b, c, d;
+    cin>>a.x>>a.y>>b.x>>b.y>>c.x>>c.y>>d.x>>d.y;
+    dot AB = vectr(a, b), CD = vectr(c, d), AC = vectr(a, c), AD = vectr(a, d), CA = vectr(c, a), CB = vectr(c, b), BD = vectr(b, d), DA = vectr(d, a), DB = vectr(d, b), BC = vectr(b, c);
+    if (kos(AB, CD) == 0)
+    {
+        //cout<<1<<'\n';
+        if (one_line( AC, BD, CB, AD))
+        {
+          //  cout<<2<<'\n';
+            if (scolar(CA, CB) <= 0 || scolar(DA, DB) <= 0 || scolar(BC, BD) <= 0 || scolar(AC, AD) <= 0)
+                cout<<"YES";
+            else
+                cout<<"NO";
+        }
+        else
+            cout<<"NO";
+    }
+    else
+    {
+        //cout<<3<<'\n';
+        if (dot_vectr(AB, AC, AD) && dot_vectr(CD, CA, CB))
+            cout<<"YES";
+        else
+            cout<<"NO";
+    }
+
+return 0;
+}
