@@ -1,0 +1,93 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+
+struct dot
+{
+    int x, y;
+};
+dot vectr(dot a, dot b)
+{
+    dot c;
+    c.x = b.x - a.x;
+    c.y = b.y - a.y;
+    return c;
+}
+int CP(dot a, dot b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
+int VP(dot a, dot b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+bool vector_and_two_dot(dot AB, dot AC, dot AD)
+{
+    if ((VP(AB, AC) <= 0 && VP(AB, AD) >= 0) && ( VP(AB, AC) >= 0 && VP(AB, AD)<= 0))
+        return true;
+    return false;
+}
+bool one_line(dot a, dot b, dot c, dot d)
+{
+    if (VP(a, b) == 0 && VP(c, d) == 0)
+        return true;
+    return false;
+}
+struct line
+{
+    int a, b, c;
+};
+line get(dot a, dot b)
+{
+    line l;
+    l.a = (a.y - b.y);
+    l.b = (b.x - a.x);
+    l.c = (a.x * b.y - b.x * a.y);
+    return l;
+}
+
+bool proection(int a, int b, int c, int d)
+{
+    if (a > b)
+        swap(a, b);
+    if (c > d)
+        swap(c, d);
+    return max(a, c) <= min(b, d);
+}
+int main()
+{
+    int n;
+    dot point, a;
+    cin>>n>>a.x>>a.y;
+    vector <dot> vec;
+    for (int i = 0; i < n; i++)
+    {
+        cin>>a.x>>a.y;
+        vec.push_back(a);
+    }
+    vec.push_back(vec[0]);
+    d corner = 0;
+    for (int i = 1; i <= n; i++)
+    {
+        dot ab = vectr(a, vec[i-1]), ac = vectr(a, vec[i]);
+        corner += atan2((d)VP(ab, ac), (d)CP(ab, ac));
+    }
+    if (corner > 1)
+        cout<<"YES";
+    else
+        cout<<"NO";
+return 0;
+}
