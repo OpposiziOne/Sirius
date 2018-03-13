@@ -1,0 +1,103 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+
+struct dot
+{
+    int x, y;
+};
+dot vectr(dot a, dot b)
+{
+    dot c;
+    c.x = b.x - a.x;
+    c.y = b.y - a.y;
+    return c;
+}
+int CP(dot a, dot b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
+int VP(dot a, dot b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+bool one_line(dot a, dot b, dot c, dot d)
+{
+    if (VP(a, b) == 0 && VP(c, d) == 0)
+        return true;
+    return false;
+}
+struct line
+{
+    int a, b, c;
+};
+line get(dot a, dot b)
+{
+    line l;
+    l.a = (a.y - b.y);
+    l.b = (b.x - a.x);
+    l.c = (a.x * b.y - b.x * a.y);
+    return l;
+}
+
+bool proection(int a, int b, int c, int d)
+{
+    if (a > b)
+        swap(a, b);
+    if (c > d)
+        swap(c, d);
+    return max(a, c) <= min(b, d);
+}
+int main()
+{
+    //freopen("input.txt", "r", stdin);
+    int n;
+    cin>>n;
+    vector <dot> vec;
+    dot a, b, g, c;
+    cin>>a.x>>a.y;
+    g.x = a.x;
+    g.y = a.y;
+    for (int i = 1; i < n; i++)
+    {
+        cin>>b.x>>b.y;
+        vec.push_back(vectr(a, b));
+        a.x = b.x;
+        a.y = b.y;
+    }
+    bool bb = true;
+    vec.push_back(vectr(a, g));
+    int k = VP(vec[0], vec[1]);
+    bool zn;
+    if (k > 0)
+        zn = true;
+    else
+        zn = false;
+    for (int i = 2; i < n; i++)
+    {
+        int t = VP(vec[i-1], vec[i]);
+        if ((t > 0) != zn)
+            bb = false;
+    }
+    int t = VP(vec[n-1], vec[0]);
+    if ((t > 0) != zn)
+        bb = false;
+    if (bb)
+        cout<<"YES";
+    else
+        cout<<"NO";
+return 0;
+}
