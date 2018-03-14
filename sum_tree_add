@@ -1,0 +1,152 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+ll my_pow (ll a, ll n)
+{
+    ll res = 1;
+    while (n)
+        if (n & 1)
+        {
+            res *= a;
+            --n;
+        }
+        else
+        {
+            a *= a;
+            n >>= 1;
+        }
+    return res;
+}
+struct for_tree
+{
+    ll sum, add;
+    bool upd;
+};
+const ll MAXN = 1e5, neutral = 1e9 + 10;
+ll sz = 1;
+for_tree tree[MAXN*4];
+void build(ll n)
+{
+    while ( sz < n)
+        sz *= 2;
+    for (ll i = 1; i < 2 * sz; i++)
+    {
+        tree[i].add = neutral;
+        tree[i].sum = 0;
+        tree[i].upd = false;
+    }
+}
+void push(ll v)
+{
+    if (tree[v].add == neutral)
+        return;
+
+    tree[v*2].add = tree[v].add;
+    tree[v*2].upd = true;
+    tree[v*2+1].add = tree[v].add;
+    tree[v*2+1].upd = true;
+    tree[v].add = neutral;
+    return;
+}
+ll sm (ll v, ll t)
+{
+    if (tree[v*2].upd)
+    {
+        tree[v*2].sum = tree[v*2].add * t;
+        tree[v*2].upd = false;
+    }
+    if (tree[v*2+1].upd)
+    {
+        tree[v*2+1].sum = tree[v*2+1].add * t;
+        tree[v*2+1].upd = false;
+    }
+    return tree[v*2].sum + tree[v*2+1].sum;
+}
+void upd(ll v, ll tl, ll tr, ll l, ll r, ll add)
+{
+    if ( l > r)
+        return;
+    if ( l == tl  && tr == r)
+    {
+        tree[v].sum = add * (tr - tl + 1);
+        tree[v].add = add;
+        tree[v].upd = false;
+        return;
+    }
+    push(v);
+    ll tm = (tl + tr) / 2;
+    upd(v*2, tl, tm, l, min(r, tm), add);
+    upd(v*2+1, tm+1, tr, max(l, tm+1), r, add);
+    tree[v].sum = sm(v, (tr - tl  + 1) / 2);
+    tree[v].upd = false;
+}
+ll sum(ll v, ll tl, ll tr, ll l, ll r)
+{
+    if ( l > r)
+        return 0;
+    if ( tl == l && tr == r)
+    {
+        if (tree[v].upd)
+        {
+            tree[v].sum = tree[v].add * (tr - tl + 1);
+            tree[v].upd = false;
+        }
+        return tree[v].sum;
+    }
+    if (tree[v].upd)
+    {
+        tree[v].sum = tree[v].add * (tr - tl  +1);
+        tree[v].upd = false;
+    }
+    push(v);
+    ll tm = (tl + tr) / 2;
+    return sum(v*2, tl, tm, l, min(r, tm)) + sum(v*2+1, tm + 1, tr, max(l, tm+1), r);
+}
+void cout_tree()
+{
+        ll j = 0, k = 2;
+    while (++j < sz * 2)
+    {
+        cout<<tree[j].sum<<" ";
+        if (j == k-1)
+        {
+            k *= 2;
+            cout<<'\n';
+        }
+    }
+}
+int main()
+{
+    freopen("sum.in", "r", stdin);
+    freopen("sum.out", "w", stdout);
+    ll n;
+    cin>>n;
+    build(n);
+    ll m;
+    cin>>m;
+    char c;
+    ll l, r, x;
+    vector <ll> ans;
+    for (ll i = 0; i <m; i++)
+    {
+        cin>>c;
+        if (c == 'A')
+        {
+            cin>>l>>r>>x;
+            upd(1, 1, sz, l, r, x);
+        }
+        else
+        {
+            cin>>l>>r;
+            ans.push_back(sum(1, 1, sz, l, r));
+        }
+    }
+    for (auto it:ans)
+        cout<<it<<'\n';
+return 0;
+}
