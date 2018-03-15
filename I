@@ -1,0 +1,119 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+
+struct dot
+{
+    int x, y;
+};
+dot vectr(dot a, dot b)
+{
+    dot c;
+    c.x = b.x - a.x;
+    c.y = b.y - a.y;
+    return c;
+}
+int CP(dot a, dot b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
+int VP(dot a, dot b)
+{
+    return a.x * b.y - a.y * b.x;
+}
+bool vector_and_two_dot(dot AB, dot AC, dot AD)
+{
+    if ((VP(AB, AC) <= 0 && VP(AB, AD) >= 0) && ( VP(AB, AC) >= 0 && VP(AB, AD)<= 0))
+        return true;
+    return false;
+}
+bool one_line(dot a, dot b, dot c, dot d)
+{
+    if (VP(a, b) == 0 && VP(c, d) == 0)
+        return true;
+    return false;
+}
+struct line
+{
+    int a, b, c;
+};
+line get(dot a, dot b)
+{
+    line l;
+    l.a = (a.y - b.y);
+    l.b = (b.x - a.x);
+    l.c = (a.x * b.y - b.x * a.y);
+    return l;
+}
+d dl(d x, d y, d x2, d y2)
+{
+    return sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y));
+}
+bool proection(int a, int b, int c, int d)
+{
+    if (a > b)
+        swap(a, b);
+    if (c > d)
+        swap(c, d);
+    return max(a, c) <= min(b, d);
+}
+int main()
+{
+    int n = 3, k, x, y;
+    cin>>k>>x>>y;
+    dot a;
+    a.x = 0;
+    a.y = 0;
+    vector <dot> vec;
+    vec.push_back(a);
+    a.y = k;
+    vec.push_back(a);
+    a.y = 0;
+    a.x = k;
+    vec.push_back(a);
+    vec.push_back(vec[0]);
+    d corner = 0;
+    dot point;
+    point.x = x;
+    point.y = y;
+    //cout<<point.x<<" "<<point.y<<'\n';
+    for (int i = 1; i <= n; i++)
+    {
+        dot ab = vectr(point, vec[i-1]), ac = vectr(point, vec[i]), ca = vectr(vec[i], point);
+        if (VP(ab, ca) == 0 && CP(ab, ca) > 0)
+        {
+            corner += 100;
+        }
+        corner += atan2((d)VP(ab, ac), (d)CP(ab, ac));
+    }
+    d len = dl(0, 0, (d)x, (d)y);
+    int ans = 1;
+    if (dl((d) k, 0, (d) x, (d) y) < len)
+    {
+        len = dl((d) k, 0, (d) x, (d) y);
+        ans = 2;
+    }
+    if (dl(0, (d)k, (d)x, (d)y) < len)
+    {
+        ans = 3;
+    }
+    //cout<<corner;
+    if (abs(corner) > 1)
+        cout<<0;
+    else
+        cout<<ans;
+return 0;
+}
