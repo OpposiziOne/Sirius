@@ -1,0 +1,50 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+const int MAXN = 15;
+bool used[MAXN][MAXN];
+int dx[4] = {0, 1, 0, -1}, dy[4] = {1, 0, -1, 0};
+int ans = 0;
+void dfs(int x, int y)
+{
+    ans++;
+    used[x][y] = true;
+    for (int i = 0; i < 4; i++)
+    {
+        int x2 = x + dx[i], y2 = y + dy[i];
+        if (!used[x2][y2])
+            dfs(x2, y2);
+    }
+}
+int main()
+{
+    int n;
+    cin>>n;
+    char c;
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= n; j++)
+        {
+            cin>>c;
+            if (c == '.')
+                used[i][j] = false;
+            else
+                used[i][j] = true;
+        }
+    int x, y;
+    cin>>x>>y;
+    dfs(x, y);
+    cout<<ans;
+return 0;
+}
