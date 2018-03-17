@@ -1,0 +1,75 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    ll res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+const ll MAXN = 500, inf  = 1e8;
+struct edge
+{
+    ll v, to, c;
+};
+ll p[MAXN], x;
+vector <ll> way(MAXN, inf);
+int main(){
+    //freopen("input.txt", "r", stdin);
+    ll n, k;
+    cin>>n;
+    vector <edge> g;
+    for (ll i = 1; i <= n; i++)
+        for (ll j = 1; j <= n; j++)
+        {
+            cin>>k;
+            if (k != 100000)
+            {
+                edge s;
+                s.v = i;
+                s.to = j;
+                s.c = k;
+                g.push_back(s);
+            }
+        }
+    way[1] = 0;
+    for (ll i = 0; i <= n; i++)
+    {
+        x = -1;
+        for (auto it:g)
+        {
+            if (way[it.to] > way[it.v] + it.c)
+            {
+                way[it.to] = max(-inf, way[it.v] + it.c);
+                p[it.to] = it.v;
+                x = it.to;
+            }
+        }
+    }
+    if (x == -1)
+    {
+        cout<<"NO";
+        return 0;
+    }
+    else
+        cout<<"YES"<<'\n';
+    for (int i = 1; i <= n; i++)
+        x = p[x];
+    vector <int> v;
+    for (int t = x;; t = p[t])
+    {
+        v.push_back(t);
+        if (t == x && v.size() > 1) break;
+    }
+    reverse(v.begin(), v.end());
+    cout<<v.size()<<'\n';
+    for (auto it:v)
+        cout<<it<<" ";
+return 0;
+}
