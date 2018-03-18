@@ -1,0 +1,108 @@
+//HELLO WORLD by http://codeforces.com/profile/Programmer
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+const int MAXN  = 25, inf = 1e8;
+struct edge
+{
+    int x, y, z;
+};
+
+queue <edge> q;
+int a[MAXN][MAXN], way[MAXN][MAXN][4], sx, sy, dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+void upd(int x, int y, int z, int k) //k - napravlenie
+{
+    edge f;
+    f.x = x + dx[k];
+    f.y = y + dy[k];
+    f.z = k;
+    if (a[x+dx[k]][y+dy[k]] != -1 && way[x][y][z] + 1 < way[f.x][f.y][f.z])
+    {
+        way[f.x][f.y][f.z] = way[x][y][z] + 1;
+        q.push(f);
+    }
+}
+void BFS(int x, int y)
+{
+    for (int i = 0; i < MAXN; i++)
+        for (int j = 0; j < MAXN; j++)
+            for (int k = 0; k < 4; k++)
+                way[i][j][k] = inf;
+    way[x][y][0] = 0;
+    way[x][y][1] = 0;
+    way[x][y][2] = 0;
+    way[x][y][3] = 0;
+    int z;
+    while (!q.empty())
+    {
+        cout<<x<<" "<<y<<" "<<z;
+        x = q.front().x;
+        y = q.front().y;
+        z = q.front().z;
+        q.pop();
+        if (sx == x && sy == y)
+            for (int i = 0; i < 4; i++)
+            {
+                    upd(x, y, z, i);
+                    upd(x, y, z, (i+1)%4);
+            }
+        else
+        {
+            upd(x, y, z, z);
+            upd(x, y, z, (z+1)%4);
+        }
+    }
+}
+int main()
+{
+    freopen("input.txt", "r", stdin);
+    int n, m;
+    cin>>n>>m;
+    int fx, fy;
+    string s;
+    for (int i = 0; i <= n; i++)
+    {
+            getline(cin, s);
+            for (int j = 0; j < m; j++)
+            {
+                if (s[j] == 'X')
+                    a[i][j] = -1;
+                else
+                    a[i][j] = 0;
+                if (s[j] == 'S')
+                {
+                    sx = i;
+                    sy = j;
+                }
+                if (s[j] == 'F')
+                {
+                    fx = i;
+                    fy = j;
+                }
+            }
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 0; j <= m; j++)
+            cout<<a[i][j]<<" ";
+        cout<<'\n';
+    }
+    cout<<sx<<" "<<sy<<'\n';
+    BFS(sx, sy);
+    int ans = inf;
+    for (int i = 0; i < 4; i++)
+        ans = min(way[fx][fy][i], ans);
+    cout<<ans;
+return 0;
+}
