@@ -1,0 +1,72 @@
+/*ЗАПУСКАЕМ
+░ГУСЯ░▄▀▀▀▄░РАБОТЯГУ░░
+▄███▀░◐░░░▌░░░░░░░
+░░░░▌░░░░░▐░░░░░░░
+░░░░▐░░░░░▐░░░░░░░
+░░░░▌░░░░░▐▄▄░░░░░
+░░░░▌░░░░▄▀▒▒▀▀▀▀▄
+░░░▐░░░░▐▒▒▒▒▒▒▒▒▀▀▄
+░░░▐░░░░▐▄▒▒▒▒▒▒▒▒▒▒▀▄
+░░░░▀▄░░░░▀▄▒▒▒▒▒▒▒▒▒▒▀▄
+░░░░░░▀▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▀▄
+░░░░░░░░░░░▌▌░▌▌░░░░░
+░░░░░░░░░░░▌▌░▌▌░░░░░
+░░░░░░░░░▄▄▌▌▄▌▌░░░░░*/
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+const int MAXN = 1e6;
+vector <int> used(MAXN, false);
+map <pair<char, int>, int> bor;
+int level = 1;
+void add(string s)
+{
+    int k = 0;
+    for (int i = 0; i < s.length(); i++)
+    {
+        if (!bor.count({s[i], k}))
+        {
+            for (int j = i; j < s.length(); j++)
+            {
+                bor[{s[j], k}] = level;
+                k = level++;
+            }
+            used[k] = true;
+            return;
+        }
+        else
+        {
+            k = bor[{s[i], k}];
+        }
+    }
+    used[k] = true;
+    return;
+}
+bool get(string s)
+{
+    int k = 0;
+    for (auto c:s)
+    {
+        if (!bor.count({c, k}))
+            return false;
+        k = bor[{c, k}];
+    }
+    return used[k];
+}
+int main()
+{
+    
+
+return 0;
+}
