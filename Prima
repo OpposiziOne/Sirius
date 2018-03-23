@@ -1,0 +1,67 @@
+/*ЗАПУСКАЕМ
+░ГУСЯ░▄▀▀▀▄░РАБОТЯГУ░░
+▄███▀░◐░░░▌░░░░░░░
+░░░░▌░░░░░▐░░░░░░░
+░░░░▐░░░░░▐░░░░░░░
+░░░░▌░░░░░▐▄▄░░░░░
+░░░░▌░░░░▄▀▒▒▀▀▀▀▄
+░░░▐░░░░▐▒▒▒▒▒▒▒▒▀▀▄
+░░░▐░░░░▐▄▒▒▒▒▒▒▒▒▒▒▀▄
+░░░░▀▄░░░░▀▄▒▒▒▒▒▒▒▒▒▒▀▄
+░░░░░░▀▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▀▄
+░░░░░░░░░░░▌▌░▌▌░░░░░
+░░░░░░░░░░░▌▌░▌▌░░░░░
+░░░░░░░░░▄▄▌▌▄▌▌░░░░░*/
+#include <stdio.h>
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll INF=1e18;
+typedef double d;
+typedef long double lld;
+
+ll my_pow (ll a, ll n) {
+    int res = 1;
+    while (n)
+        if (n & 1) { res *= a; --n; }
+        else { a *= a; n >>= 1; }
+    return res; }
+const int MAXN = 110, inf = 1e9;
+int g[MAXN][MAXN], ans;
+vector <bool> used(MAXN, false);
+vector <int> dist(MAXN, inf);
+void Prima(int start, int n)
+{
+    dist[start] = 0;
+    for (int i = 0; i < n; i++)
+    {
+        int u = -1, len = inf;
+        for (int j = 1; j <= n; j++)
+            if (!used[j] && dist[j] < len)
+            {
+                len = dist[j];
+                u = j;
+            }
+        used[u] = true;
+        ans += len;
+        for (int j = 1; j <= n; j++)
+            if (!used[j] && g[u][j] < dist[j]) dist[j] = g[u][j];
+    }
+}
+int main()
+{
+    for (int i = 0; i < MAXN; i++)
+        for (int j = 0; j < MAXN; j++)
+            g[i][j] = inf;
+    int n, x, y, c, m;
+    cin>>n>>m;
+    for (int i = 0; i < m; i++)
+    {
+        cin>>x>>y>>c;
+        g[x][y] = c;
+        g[y][x] = c;
+    }
+    Prima(1, n);
+    cout<<ans;
+return 0;
+}
